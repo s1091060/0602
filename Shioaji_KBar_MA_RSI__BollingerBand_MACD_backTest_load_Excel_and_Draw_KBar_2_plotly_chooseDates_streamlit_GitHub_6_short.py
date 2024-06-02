@@ -208,10 +208,10 @@ st.subheader("設定計算短移動平均線(MA)的 K 棒數目(整數, 例如 2
 ShortMAPeriod=st.slider('選擇一個整數', 0, 100, 2)
 
 #### 計算長短移動平均線
-KBar_df['MA_long'] = KBar_df['close'].rolling(window=LongMAPeriod).mean()
+KBar_df['MA_l'] = KBar_df['close'].rolling(window=LongMAPeriod).mean()
 KBar_df['MA_short'] = KBar_df['close'].rolling(window=ShortMAPeriod).mean()
 
-valid_indices = KBar_df['MA_long'].first_valid_index()
+valid_indices = KBar_df['MA_l'].first_valid_index()
 
 #### 尋找最後 NAN值的位置
 #last_nan_index_MA = KBar_df['MA_long'][::-1].index[KBar_df['MA_long'][::-1].apply(pd.isna)][0]
@@ -341,7 +341,7 @@ with st.expander("K線圖, 移動平均線"):
     #### include a go.Bar trace for volumes
 if valid_indices is not None:
     fig1.add_trace(go.Bar(x=KBar_df['Time'], y=KBar_df['Volume'], name='成交量', marker=dict(color='black')),secondary_y=False)  ## secondary_y=False 表示此圖形的y軸scale是在左邊而不是在右邊
-    fig1.add_trace(go.Scatter(x=KBar_df['Time'][valid_indices:], y=KBar_df['MA_long'][valid_indices:], mode='lines',line=dict(color='orange', width=2), name=f'{LongMAPeriod}-根 K棒 移動平均線'), secondary_y=True)
+    fig1.add_trace(go.Scatter(x=KBar_df['Time'][valid_indices:], y=KBar_df['MA_l'][valid_indices:], mode='lines',line=dict(color='orange', width=2), name=f'{LongMAPeriod}-根 K棒 移動平均線'), secondary_y=True)
 
     fig1.add_trace(go.Scatter(x=KBar_df['Time'][valid_indices:], y=KBar_df['MA_short'][valid_indices:], mode='lines',line=dict(color='pink', width=2), name=f'{ShortMAPeriod}-根 K棒 移動平均線'), 
                   secondary_y=True)
