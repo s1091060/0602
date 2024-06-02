@@ -296,11 +296,22 @@ st.subheader("設定計算布林通道的週期和標準差倍數")
 BollingerPeriod = st.slider('選擇布林通道週期 (例如20)', 1, 100, 20)
 BollingerStdDev = st.slider('選擇標準差倍數 (例如2)', 1, 5, 2)
 
+def calculate_bollinger_bands(df, period=20, std_dev_multiplier=2):
+    delta = df['close'].diff()
+    middle_band = df['close'].rolling(window=period).mean()
+    standard_deviation = df['close'].rolling(window=period).std()
+    upper_band = middle_band + (standard_deviation * std_dev_multiplier)
+    lower_band = middle_band - (standard_deviation * std_dev_multiplier)
+    return  middle_band, upper_band, lower_band
+
+
 KBar_df = pd.DataFrame(KBar_dic)
 KBar_df['MA'] = KBar_df['close'].rolling(window=BollingerPeriod).mean()
 KBar_df['STD'] = KBar_df['close'].rolling(window=BollingerPeriod).std()
 KBar_df['Upper'] = KBar_df['MA'] + (KBar_df['STD'] * BollingerStdDev)
 KBar_df['Lower'] = KBar_df['MA'] - (KBar_df['STD'] * BollingerStdDev)
+
+
 
 ###### (5) 將 Dataframe 欄位名稱轉換  ###### 
 KBar_df.columns = [ i[0].upper()+i[1:] for i in KBar_df.columns ]
